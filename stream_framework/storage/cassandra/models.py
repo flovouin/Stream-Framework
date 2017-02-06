@@ -4,14 +4,14 @@ from cassandra.cqlengine.models import Model
 
 class BaseActivity(Model):
     feed_id = columns.Ascii(primary_key=True, partition_key=True)
-    activity_id = columns.VarInt(primary_key=True, clustering_order='desc')
+    activity_id = columns.Ascii(primary_key=True, clustering_order='desc')
 
 
 class Activity(BaseActivity):
-    actor = columns.Integer(required=False)
+    actor = columns.Ascii(required=False)
     extra_context = columns.Bytes(required=False)
-    object = columns.Integer(required=False)
-    target = columns.Integer(required=False)
+    object = columns.Ascii(required=False)
+    target = columns.Ascii(required=False)
     time = columns.DateTime(required=False)
     verb = columns.Integer(required=False)
 

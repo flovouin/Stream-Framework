@@ -84,7 +84,7 @@ class Activity(BaseActivity):
         return self.serialization_id == other.serialization_id
 
     def __lt__(self, other):
-       return self.serialization_id < other.serialization_id
+        return self.serialization_id < other.serialization_id
 
     def __hash__(self):
         return hash(self.serialization_id)
@@ -107,14 +107,13 @@ class Activity(BaseActivity):
 
         :returns: int --the serialization id
         '''
-        if self.object_id >= 10 ** 10 or self.verb.id >= 10 ** 3:
-            raise TypeError('Fatal: object_id / verb have too many digits !')
+        if self.verb.id >= 10 ** 3:
+            raise TypeError('Fatal: verb have too many digits !')
         if not self.time:
             raise TypeError('Cant serialize activities without a time')
         milliseconds = str(int(datetime_to_epoch(self.time) * 1000))
-        serialization_id_str = '%s%0.10d%0.3d' % (
+        serialization_id = '%s%s%0.3d' % (
             milliseconds, self.object_id, self.verb.id)
-        serialization_id = int(serialization_id_str)
         return serialization_id
 
     def _set_object_or_id(self, field, object_):
@@ -126,7 +125,7 @@ class Activity(BaseActivity):
         field = object
         '''
         id_field = '%s_id' % field
-        if isinstance(object_, six.integer_types):
+        if isinstance(object_, six.string_types):
             setattr(self, id_field, object_)
         elif object_ is None:
             setattr(self, field, None)
@@ -227,7 +226,7 @@ class AggregatedActivity(BaseActivity):
         Works on both hydrated and not hydrated activities
         '''
         if self._activity_ids:
-            length = len(self.activity_ids)
+            length = len(self._activity_ids)
         else:
             length = len(self.activities)
         return length
